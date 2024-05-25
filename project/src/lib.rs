@@ -93,4 +93,22 @@ mod tests {
         // following parts are not updated by the fn
         assert_eq!(0.0, project0.final_amount);
     }
+
+    #[test]
+    fn test_update_multiple_contribution() {
+        let mut project0 = Project::new(0);
+        let contrib0 = Contribution{from: 0, to: 0, amount: 100.0};
+        let contrib1 = Contribution{from: 1, to: 0, amount: 100.0};
+        project0.add_contribution(contrib0);
+        project0.add_contribution(contrib1);
+        project0.update();
+
+        assert_eq!(200.0, project0.total_contribution);
+        // expected = sqrt(100) + sqrt(100) = 20
+        assert_eq!(20.0, project0.sum_rootsquared_contribution);
+        // expected = sum_rootsquared_contribution² = 20² = 400
+        assert_eq!(400.0, project0.matching_amount);
+        // following members are not updated yet.
+        assert_eq!(0.0, project0.final_amount);
+    }
 }

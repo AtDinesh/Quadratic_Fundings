@@ -19,3 +19,17 @@ pub struct Project {
     final_amount: f64,
     contribution_list: HashMap<u32, f64>,
 }
+
+impl Project {
+
+    pub fn new(id: u32) -> Project {
+        Project {
+            id: id, 
+            total_contribution: 0.0, 
+            sum_rootsquared_contribution: 0.0, 
+            matching_amount: 0.0, 
+            final_amount: 0.0, 
+            contribution_list: HashMap::new()
+        }
+    }
+}

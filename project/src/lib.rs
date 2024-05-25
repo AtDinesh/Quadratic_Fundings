@@ -16,7 +16,6 @@ pub struct Project {
     total_contribution: f64,
     sum_rootsquared_contribution: f64,
     matching_amount: f64,
-    final_amount: f64,
     contribution_list: HashMap<u32, f64>,
 }
 
@@ -28,7 +27,6 @@ impl Project {
             total_contribution: 0.0, 
             sum_rootsquared_contribution: 0.0, 
             matching_amount: 0.0, 
-            final_amount: 0.0, 
             contribution_list: HashMap::new()
         }
     }
@@ -45,7 +43,6 @@ impl Project {
         self.total_contribution = 0f64;
         self.sum_rootsquared_contribution = 0f64;
         self.matching_amount = 0f64;
-        self.final_amount = 0f64;
 
         for (_id, amount) in self.contribution_list.clone().into_iter() {
             self.total_contribution += amount;
@@ -70,7 +67,6 @@ mod tests {
         assert_eq!(0.0, project0.total_contribution);
         assert_eq!(0.0, project0.sum_rootsquared_contribution);
         assert_eq!(0.0, project0.matching_amount);
-        assert_eq!(0.0, project0.final_amount);
 
         assert_eq!(1, project0.contribution_list.len());
         // Use Some() to get an Option<>, use cloned() to pass from &f64 to f64
@@ -88,7 +84,6 @@ mod tests {
         assert_eq!(0.0, project0.total_contribution);
         assert_eq!(0.0, project0.sum_rootsquared_contribution);
         assert_eq!(0.0, project0.matching_amount);
-        assert_eq!(0.0, project0.final_amount);
 
         assert_eq!(2, project0.contribution_list.len());
         // Use Some() to get an Option<>, use cloned() to pass from &f64 to f64
@@ -107,7 +102,6 @@ mod tests {
         assert_eq!(0.0, project0.total_contribution);
         assert_eq!(0.0, project0.sum_rootsquared_contribution);
         assert_eq!(0.0, project0.matching_amount);
-        assert_eq!(0.0, project0.final_amount);
 
         assert_eq!(1, project0.contribution_list.len());
         // Use Some() to get an Option<>, use cloned() to pass from &f64 to f64
@@ -127,8 +121,6 @@ mod tests {
         // pow(sqrt(),2) = Id
         assert_eq!(contrib_amount.sqrt(), project0.sum_rootsquared_contribution);
         assert_eq!(contrib_amount, project0.matching_amount);
-        // following parts are not updated by the fn
-        assert_eq!(0.0, project0.final_amount);
     }
 
     #[test]
@@ -145,7 +137,5 @@ mod tests {
         assert_eq!(20.0, project0.sum_rootsquared_contribution);
         // expected = sum_rootsquared_contribution² = 20² = 400
         assert_eq!(400.0, project0.matching_amount);
-        // following members are not updated yet.
-        assert_eq!(0.0, project0.final_amount);
     }
 }

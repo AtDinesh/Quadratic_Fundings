@@ -32,4 +32,31 @@ impl Project {
             contribution_list: HashMap::new()
         }
     }
+
+    // Add a contribution to the contribution vector.
+    pub fn add_contribution(&mut self, contribution: Contribution) {
+        // TODO: Check if the contributor already participated to this contribution (avoid easy Sybill)
+        self.contribution_list.entry(contribution.from).and_modify(|v| {*v += contribution.amount}).or_insert(contribution.amount);
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_add_contribution() {
+        let mut project0 = Project::new(0);
+        let contrib = Contribution{from: 10, to: 0, amount: 100.0};
+        project0.add_contribution(contrib);
+        
+        assert_eq!(0.0, project0.total_contribution);
+        assert_eq!(0.0, project0.sum_rootsquared_contribution);
+        assert_eq!(0.0, project0.matching_amount);
+        assert_eq!(0.0, project0.final_amount);
+
+        assert_eq!(1, project0.contribution_list.len());
+        // Use Some() to get an Option<>, use cloned() to pass from &f64 to f64
+        assert_eq!(Some(100f64), project0.contribution_list.get(&contrib.from).cloned());
+    }
 }

@@ -35,7 +35,7 @@ impl Project {
 
     // Add a contribution to the contribution vector.
     pub fn add_contribution(&mut self, contribution: Contribution) {
-        // TODO: Check if the contributor already participated to this contribution (avoid easy Sybill)
+        // Check if the contributor already participated to this contribution (avoid easy Sybill)
         self.contribution_list.entry(contribution.from).and_modify(|v| {*v += contribution.amount}).or_insert(contribution.amount);
     }
 
@@ -75,6 +75,43 @@ mod tests {
         assert_eq!(1, project0.contribution_list.len());
         // Use Some() to get an Option<>, use cloned() to pass from &f64 to f64
         assert_eq!(Some(100f64), project0.contribution_list.get(&contrib.from).cloned());
+    }
+
+    #[test]
+    fn test_add_contribution_multiple() {
+        let mut project0 = Project::new(0);
+        let contrib0 = Contribution{from: 10, to: 0, amount: 100.0};
+        let contrib1 = Contribution{from: 5, to: 0, amount: 50.0};
+        project0.add_contribution(contrib0);
+        project0.add_contribution(contrib1);
+        
+        assert_eq!(0.0, project0.total_contribution);
+        assert_eq!(0.0, project0.sum_rootsquared_contribution);
+        assert_eq!(0.0, project0.matching_amount);
+        assert_eq!(0.0, project0.final_amount);
+
+        assert_eq!(2, project0.contribution_list.len());
+        // Use Some() to get an Option<>, use cloned() to pass from &f64 to f64
+        assert_eq!(Some(100f64), project0.contribution_list.get(&contrib0.from).cloned());
+        assert_eq!(Some(50f64), project0.contribution_list.get(&contrib1.from).cloned());
+    }
+
+    #[test]
+    fn test_add_contribution_multiple_from_single() {
+        let mut project0 = Project::new(0);
+        let contrib0 = Contribution{from: 10, to: 0, amount: 100.0};
+        let contrib1 = Contribution{from: 10, to: 0, amount: 50.0};
+        project0.add_contribution(contrib0);
+        project0.add_contribution(contrib1);
+        
+        assert_eq!(0.0, project0.total_contribution);
+        assert_eq!(0.0, project0.sum_rootsquared_contribution);
+        assert_eq!(0.0, project0.matching_amount);
+        assert_eq!(0.0, project0.final_amount);
+
+        assert_eq!(1, project0.contribution_list.len());
+        // Use Some() to get an Option<>, use cloned() to pass from &f64 to f64
+        assert_eq!(Some(150f64), project0.contribution_list.get(&contrib0.from).cloned());
     }
 
     #[test]

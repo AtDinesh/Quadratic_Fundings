@@ -17,4 +17,21 @@ impl FundingRound {
             matching_pool: 0f64
         }
     }
+
+    pub fn set_matching_pool(&mut self, fund: f64) {
+        self.matching_pool = fund;
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_set_matching_pool() {
+        let mut funding_round = FundingRound::new();
+        assert_eq!(0.0, funding_round.matching_pool);
+        funding_round.set_matching_pool(100.0);
+        assert_eq!(100.0, funding_round.matching_pool);
+    }
 }

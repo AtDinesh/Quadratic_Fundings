@@ -5,7 +5,7 @@ use std::collections::HashMap;
 #[derive(Debug, Clone, PartialEq, Copy)]
 pub struct Contribution {
     from: u32,
-    to: u32,
+    to: u32,    // may be removed
     amount: f64
 }
 
@@ -51,6 +51,15 @@ impl Project {
         // Compute the QF marching amount for the project
         // In classic QF, the allocated amount for each project can be computed independently
         self.matching_amount = self.sum_rootsquared_contribution.powi(2);
+    }
+
+    // Getters
+    pub fn get_id(&self) -> u32 {
+        return self.id;
+    }
+
+    pub fn get_matching_amount(&self) -> f64 {
+        return self.matching_amount;
     }
 }
 

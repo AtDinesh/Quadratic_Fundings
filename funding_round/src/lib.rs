@@ -24,6 +24,10 @@ impl FundingRound {
         }
         self.matching_pool = fund;
     }
+
+    pub fn add_project(&mut self, proj: Project) {
+        self.projects_list.push(proj);
+    }
 }
 
 #[cfg(test)]
@@ -36,5 +40,14 @@ mod tests {
         assert_eq!(0.0, funding_round.matching_pool);
         funding_round.set_matching_pool(100.0);
         assert_eq!(100.0, funding_round.matching_pool);
+    }
+
+    #[test]
+    fn test_add_project() {
+        let proj = Project::new(1);
+        let mut round = FundingRound::new();
+        round.add_project(proj);
+
+        assert_eq!(1, round.projects_list.len());
     }
 }

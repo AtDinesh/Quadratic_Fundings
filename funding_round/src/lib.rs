@@ -19,6 +19,9 @@ impl FundingRound {
     }
 
     pub fn set_matching_pool(&mut self, fund: f64) {
+        if fund <= 0.0 {
+            panic!("Setting negative matching pool !");
+        }
         self.matching_pool = fund;
     }
 }

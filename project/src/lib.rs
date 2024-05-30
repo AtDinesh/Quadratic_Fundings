@@ -4,9 +4,9 @@ use std::collections::HashMap;
 // Define a struct to represent a contribution
 #[derive(Debug, Clone, PartialEq, Copy)]
 pub struct Contribution {
-    from: u32,
-    to: u32,    // may be removed
-    amount: f64
+    pub from: u32,
+    pub to: u32,    // may be removed
+    pub amount: f64
 }
 
 // Define a struct to represent a project

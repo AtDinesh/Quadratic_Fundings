@@ -10,7 +10,7 @@ pub struct Contribution {
 }
 
 // Define a struct to represent a project
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Project {
     id: u32,
     total_contribution: f64,
@@ -60,6 +60,18 @@ impl Project {
 
     pub fn get_matching_amount(&self) -> f64 {
         return self.matching_amount;
+    }
+
+    pub fn get_contribution_list(&self) -> HashMap<u32, f64> {
+        return self.contribution_list.clone();
+    }
+
+    pub fn get_total_contribution(&self) -> f64 {
+        return self.total_contribution;
+    }
+
+    pub fn get_sum_rootsquared_contribution(&self) -> f64 {
+        return self.sum_rootsquared_contribution;
     }
 }
 

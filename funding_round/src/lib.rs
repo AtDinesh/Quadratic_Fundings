@@ -40,6 +40,12 @@ impl FundingRound {
 
         self.projects_list.get_mut(&contrib.to).unwrap().add_contribution(contrib);
     }
+
+    pub fn update_projects(&mut self) {
+        for (_id, project) in self.projects_list.iter_mut() {
+            project.update();
+        }
+    }
 }
 
 #[cfg(test)]
@@ -91,5 +97,31 @@ mod tests {
         let contribs: HashMap<u32, f64> = p.get_contribution_list();
         assert_eq!(1, p.get_id());
         assert_eq!(1, contribs.len());
+    }
+
+    #[test]
+    fn test_update_project() {
+        let mut round = FundingRound::new();
+        let proj = Project::new(1);
+        round.add_project(proj);
+
+        let contrib = Contribution{from: 0, to: 1, amount: 10.0};
+        round.add_contribution(contrib);
+
+        // project should now have 1 contribution
+        // Other fields should not be updated yet
+        let p : Project = round.projects_list.get(&1).unwrap().clone();
+        let contribs: HashMap<u32, f64> = p.get_contribution_list();
+        assert_eq!(1, p.get_id());
+        assert_eq!(1, contribs.len());
+        assert_eq!(0.0, p.get_total_contribution());
+        assert_eq!(0.0, p.get_sum_rootsquared_contribution());
+        assert_eq!(0.0, p.get_matching_amount());
+        
+        round.update_projects();
+        // Now other fields should be updated
+        let p_updated : Project = round.projects_list.get(&1).unwrap().clone();
+        assert_eq!(contrib.amount, p_updated.get_total_contribution());
+        assert_eq!(contrib.amount.clone().sqrt(), p_updated.get_sum_rootsquared_contribution());
     }
 }

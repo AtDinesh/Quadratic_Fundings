@@ -32,6 +32,14 @@ impl FundingRound {
         }
         self.projects_list.insert(proj.get_id(), proj);
     }
+
+    pub fn add_contribution(&mut self, contrib: Contribution) {
+        if !self.projects_list.contains_key(&contrib.to) {
+            panic!("The project list does not contain the requested key");
+        }
+
+        self.projects_list.get_mut(&contrib.to).unwrap().add_contribution(contrib);
+    }
 }
 
 #[cfg(test)]
@@ -66,5 +74,22 @@ mod tests {
         round.add_project(proj0);
         assert_eq!(1, round.projects_list.len());
         round.add_project(proj0_bis); // try to insert another project with same id 0
+    }
+
+    #[test]
+    fn test_add_contribution() {
+        let mut round = FundingRound::new();
+        let proj = Project::new(1);
+        round.add_project(proj);
+
+        let contrib = Contribution{from: 0, to: 1, amount: 10.0};
+        round.add_contribution(contrib);
+
+        // project should now have 1 contribution
+        // Other fields should not be updated yet
+        let p : Project = round.projects_list.get(&1).unwrap().clone();
+        let contribs: HashMap<u32, f64> = p.get_contribution_list();
+        assert_eq!(1, p.get_id());
+        assert_eq!(1, contribs.len());
     }
 }

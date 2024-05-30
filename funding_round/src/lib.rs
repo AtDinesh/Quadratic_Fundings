@@ -27,7 +27,10 @@ impl FundingRound {
     }
 
     pub fn add_project(&mut self, proj: Project) {
-        self.projects_list.push(proj);
+        if self.projects_list.contains_key(&proj.get_id()) {
+            panic!("Trying to insert a project with key already contained in project_list !");
+        }
+        self.projects_list.insert(proj.get_id(), proj);
     }
 }
 
@@ -50,5 +53,18 @@ mod tests {
         round.add_project(proj);
 
         assert_eq!(1, round.projects_list.len());
+    }
+
+    #[test]
+    #[should_panic]
+    fn test_invalid_add_project_to_funding_roung() {
+        let mut round = FundingRound::new();
+        let proj0 = Project::new(0);
+        let proj0_bis = Project::new(0);
+
+        assert_eq!(0, round.projects_list.len());
+        round.add_project(proj0);
+        assert_eq!(1, round.projects_list.len());
+        round.add_project(proj0_bis); // try to insert another project with same id 0
     }
 }

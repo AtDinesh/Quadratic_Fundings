@@ -173,8 +173,8 @@ mod tests {
         round.add_contribution(contrib1);
         round.update_projects();
 
-        // project0 has total contribution of 5 -> matching_fund is 5²=25
-        // project1 has total contribution of 6 -> matching fund is 6²=36
+        // project0 has total of 1 contribution of 5 -> matching_fund is 5
+        // project1 has total of 1 contribution of 6 -> matching fund is 6
         // sum of matching fund < matching pool.
         // We shall keep the qf-based matching allocation.
 

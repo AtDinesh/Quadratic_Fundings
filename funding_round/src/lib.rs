@@ -1,3 +1,6 @@
+#[cfg(test)]
+use approx::relative_eq;
+
 use project::*;
 use std::collections::HashMap;
 
@@ -199,5 +202,35 @@ mod tests {
         round.update_projects();
 
         let _matching_alloc : HashMap<u32, f64> = round.compute_cqf_allocation();
+    }
+
+    #[test]
+    fn test_compute_cqf_allocation() {
+        // create the funding round
+        let mut round = FundingRound::new();
+        round.set_matching_pool(100.0);
+        // create projects for the round
+        let proj0 = Project::new(0);
+        let proj1 = Project::new(1);
+        round.add_project(proj0);
+        round.add_project(proj1);
+
+        let contrib0 = Contribution{from: 10, to: 0, amount: 125.0};
+        let contrib1 = Contribution{from: 10, to: 1, amount: 75.0};
+
+        round.add_contribution(contrib0);
+        round.add_contribution(contrib1);
+        round.update_projects();
+
+        // project0 has total of 1 contribution of 125 -> matching_fund is 125
+        // project1 has total of 1 contribution of 75 -> matching fund is 75
+        // sum of matching fund = 200 > matching pool = 100.
+        // We shall compute the capital constrained quadratic funding
+        // project 1 : 125*100/200 = 62.5
+        // project 2 : 75*100/200 = 37.5
+
+        let matching_alloc : HashMap<u32, f64> = round.compute_cqf_allocation();
+        assert_eq!(&62.5, matching_alloc.get(&0).unwrap());
+        assert_eq!(relative_eq!(&37.5, matching_alloc.get(&1).unwrap(), epsilon = f64::EPSILON), true);
     }
 }
